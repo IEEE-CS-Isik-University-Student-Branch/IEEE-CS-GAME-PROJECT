@@ -25,6 +25,6 @@ public class Main extends Game {
         Gdx.graphics.setWindowedMode(640, 480);
 
         // Show default to GameScreen screen till we start MenuScreen
-        GameManager.show(GameManager.ScreenType.GameType);
+        GameManager.show(GameManager.ScreenType.MenuType);
     }
 }
