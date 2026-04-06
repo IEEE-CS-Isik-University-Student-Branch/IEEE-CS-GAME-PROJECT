@@ -11,10 +11,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class MenuScreen implements Screen {
@@ -33,8 +30,8 @@ public class MenuScreen implements Screen {
     @Override
     public void show() {
         batch = new SpriteBatch();
-        backgroundTexture = new Texture(Gdx.files.internal("background.gif"));
-        playerPosition = new Vector2(200, 300);
+        backgroundTexture = new Texture(Gdx.files.internal("favicon.jpg"));
+        playerPosition = new Vector2(0, 0);
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -42,16 +39,27 @@ public class MenuScreen implements Screen {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        Texture buttontexture = new Texture(Gdx.files.internal("Resume.png"));
+        Texture startbutton = new Texture(Gdx.files.internal("favicon.jpg"));
+        Texture multiplayerbutton = new Texture(Gdx.files.internal("favicon.jpg")) ;
         TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
 
-        style.up = new TextureRegionDrawable(buttontexture);
-        style.down = new TextureRegionDrawable(buttontexture);
+        style.up = new TextureRegionDrawable(startbutton);
+        style.down = new TextureRegionDrawable(startbutton);
+        style.font = new BitmapFont();
+        style.up = new TextureRegionDrawable(multiplayerbutton);
+        style.down = new TextureRegionDrawable(multiplayerbutton);
         style.font = new BitmapFont();
 
-        TextButton button = new TextButton("Play", style);
-        button.setPosition(20, Gdx.graphics.getHeight() / 2);
-        stage.addActor(button);
+        TextButton SinglePlayer = new TextButton("Single Player", style);
+        TextButton MultiPlayer = new TextButton("Multi Player", style);
+        MultiPlayer.setPosition(0, Gdx.graphics.getHeight()/3);
+        MultiPlayer.setHeight(Gdx.graphics.getHeight() / 6);
+        MultiPlayer.setWidth(Gdx.graphics.getWidth() / 5);
+        SinglePlayer.setPosition(0, Gdx.graphics.getHeight()/2);
+        SinglePlayer.setHeight(Gdx.graphics.getHeight() / 6);
+        SinglePlayer.setWidth(Gdx.graphics.getWidth() / 5);
+        stage.addActor(SinglePlayer);
+        stage.addActor(MultiPlayer);
     }
 
     /**
@@ -59,6 +67,7 @@ public class MenuScreen implements Screen {
      *
      * @param delta The time in seconds since the last render.
      */
+
     /**
     * Change play button's position and Reorganize background +added 1 gif background+
      */
@@ -70,7 +79,7 @@ public class MenuScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.draw(backgroundTexture, Gdx.graphics.getWidth()/-2, Gdx.graphics.getHeight()/-2, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
         stage.act(delta);
         stage.draw();
@@ -83,7 +92,9 @@ public class MenuScreen implements Screen {
      */
     @Override
     public void resize(int width, int height) {
-
+        camera.viewportWidth=width;
+        camera.viewportHeight=height;
+        camera.update();
     }
 
     /**
@@ -91,7 +102,6 @@ public class MenuScreen implements Screen {
      */
     @Override
     public void pause() {
-
     }
 
     /**
@@ -99,7 +109,6 @@ public class MenuScreen implements Screen {
      */
     @Override
     public void resume() {
-
     }
 
     /**
@@ -115,6 +124,7 @@ public class MenuScreen implements Screen {
      */
     @Override
     public void dispose() {
-
+        stage.dispose();
+        backgroundTexture.dispose();
     }
 }
