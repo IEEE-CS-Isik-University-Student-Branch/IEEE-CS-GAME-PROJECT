@@ -16,7 +16,6 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 
 public class MenuScreen implements Screen {
     private Stage stage = new Stage(new FillViewport(16 * 40,9*40));
-    private boolean isStageBuild = false;
     /**
      * Called when this screen becomes the current screen for a {@link Game}.
      * Initializes the menu UI and input when this screen is shown.
@@ -26,13 +25,9 @@ public class MenuScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.input.setInputProcessor(stage);
 
-        if(!isStageBuild) {
-            buildStage();
-            isStageBuild = true;
-        }
     }
 
-    public void buildStage() {
+    {
         Texture backgroundTexture = new Texture(Gdx.files.internal("favicon.jpg"));
 
         Image backgroundImage = new Image(backgroundTexture);
