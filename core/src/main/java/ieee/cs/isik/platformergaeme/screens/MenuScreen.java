@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -14,7 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 
 public class MenuScreen implements Screen {
-    private Stage stage = new Stage();
+    private Stage stage = new Stage(new FillViewport(16 * 40,9*40));
+    private boolean isStageBuild = false;
     /**
      * Called when this screen becomes the current screen for a {@link Game}.
      * Initializes the menu UI and input when this screen is shown.
@@ -22,11 +24,15 @@ public class MenuScreen implements Screen {
     @Override
     public void show() {
         Gdx.gl.glClearColor(0, 0, 0, 1);
-
         Gdx.input.setInputProcessor(stage);
 
-        stage.setViewport(new FillViewport(16 * 40,9*40));
+        if(!isStageBuild) {
+            buildStage();
+            isStageBuild = true;
+        }
+    }
 
+    public void buildStage() {
         Texture backgroundTexture = new Texture(Gdx.files.internal("favicon.jpg"));
 
         Image backgroundImage = new Image(backgroundTexture);
