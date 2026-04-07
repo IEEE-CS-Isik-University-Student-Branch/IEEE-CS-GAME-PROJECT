@@ -41,29 +41,32 @@ public class MenuScreen implements Screen {
         stage.addActor(backgroundImage);
 
 
-        Texture startbutton = new Texture(Gdx.files.internal("favicon.jpg"));
-        Texture multiplayerbutton = new Texture(Gdx.files.internal("favicon.jpg")) ;
-        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+        Texture singlePlayerButtonTexture = new Texture(Gdx.files.internal("favicon.jpg"));
+        Texture multiPlayerButtonTexture = new Texture(Gdx.files.internal("favicon.jpg")) ;
+        TextButton.TextButtonStyle singlePlayerButtonStyle = new TextButton.TextButtonStyle(),
+                                    multiplayerButtonStyle = new TextButton.TextButtonStyle();
 
-        style.up = new TextureRegionDrawable(startbutton);
-        style.down = new TextureRegionDrawable(startbutton);
-        style.font = new BitmapFont();
-        style.up = new TextureRegionDrawable(multiplayerbutton);
-        style.down = new TextureRegionDrawable(multiplayerbutton);
-        style.font = new BitmapFont();
+        singlePlayerButtonStyle.up = new TextureRegionDrawable(singlePlayerButtonTexture);
+        singlePlayerButtonStyle.down = new TextureRegionDrawable(singlePlayerButtonTexture);
+        singlePlayerButtonStyle.font = new BitmapFont();
 
-        TextButton SinglePlayer = new TextButton("Single Player", style);
-        TextButton MultiPlayer = new TextButton("Multi Player", style);
+        multiplayerButtonStyle.up = new TextureRegionDrawable(multiPlayerButtonTexture);
+        multiplayerButtonStyle.down = new TextureRegionDrawable(multiPlayerButtonTexture);
+        multiplayerButtonStyle.font = new BitmapFont();
 
-        MultiPlayer.setPosition(0, stage.getHeight()/3);
-        MultiPlayer.setHeight(stage.getHeight() / 6);
-        MultiPlayer.setWidth(stage.getWidth() / 5);
+        TextButton singlePlayerButton = new TextButton("Single Player", singlePlayerButtonStyle);
+        TextButton multiPlayerButton = new TextButton("Multi Player", multiplayerButtonStyle);
 
-        SinglePlayer.setPosition(0, stage.getHeight()/2);
-        SinglePlayer.setHeight(stage.getHeight() / 6);
-        SinglePlayer.setWidth(stage.getWidth() / 5);
-        stage.addActor(SinglePlayer);
-        stage.addActor(MultiPlayer);
+        multiPlayerButton.setPosition(0, stage.getHeight()/3);
+        multiPlayerButton.setHeight(stage.getHeight() / 6);
+        multiPlayerButton.setWidth(stage.getWidth() / 5);
+
+        singlePlayerButton.setPosition(0, stage.getHeight()/2);
+        singlePlayerButton.setHeight(stage.getHeight() / 6);
+        singlePlayerButton.setWidth(stage.getWidth() / 5);
+
+        stage.addActor(singlePlayerButton);
+        stage.addActor(multiPlayerButton);
     }
 
     /**
