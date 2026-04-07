@@ -5,39 +5,35 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 
 public class MenuScreen implements Screen {
-    private Stage stage;
-    private OrthographicCamera camera;
-    private SpriteBatch batch;
-    private Texture backgroundTexture;
-    private Vector2 playerPosition;
+    private Stage stage = new Stage();
     /**
      * Called when this screen becomes the current screen for a {@link Game}.
-     */
-
-    /**
      * Initializes the menu UI and input when this screen is shown.
      */
     @Override
     public void show() {
-        batch = new SpriteBatch();
-        backgroundTexture = new Texture(Gdx.files.internal("favicon.jpg"));
-        playerPosition = new Vector2(0, 0);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
 
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-        stage = new Stage();
         Gdx.input.setInputProcessor(stage);
+
+        stage.setViewport(new FillViewport(16 * 40,9*40));
+
+        Texture backgroundTexture = new Texture(Gdx.files.internal("favicon.jpg"));
+
+        Image backgroundImage = new Image(backgroundTexture);
+        backgroundImage.setFillParent(true);
+        backgroundImage.setSize(stage.getWidth(), stage.getHeight());
+        stage.addActor(backgroundImage);
+
 
         Texture startbutton = new Texture(Gdx.files.internal("favicon.jpg"));
         Texture multiplayerbutton = new Texture(Gdx.files.internal("favicon.jpg")) ;
@@ -52,12 +48,14 @@ public class MenuScreen implements Screen {
 
         TextButton SinglePlayer = new TextButton("Single Player", style);
         TextButton MultiPlayer = new TextButton("Multi Player", style);
-        MultiPlayer.setPosition(0, Gdx.graphics.getHeight()/3);
-        MultiPlayer.setHeight(Gdx.graphics.getHeight() / 6);
-        MultiPlayer.setWidth(Gdx.graphics.getWidth() / 5);
-        SinglePlayer.setPosition(0, Gdx.graphics.getHeight()/2);
-        SinglePlayer.setHeight(Gdx.graphics.getHeight() / 6);
-        SinglePlayer.setWidth(Gdx.graphics.getWidth() / 5);
+
+        MultiPlayer.setPosition(0, stage.getHeight()/3);
+        MultiPlayer.setHeight(stage.getHeight() / 6);
+        MultiPlayer.setWidth(stage.getWidth() / 5);
+
+        SinglePlayer.setPosition(0, stage.getHeight()/2);
+        SinglePlayer.setHeight(stage.getHeight() / 6);
+        SinglePlayer.setWidth(stage.getWidth() / 5);
         stage.addActor(SinglePlayer);
         stage.addActor(MultiPlayer);
     }
@@ -67,20 +65,10 @@ public class MenuScreen implements Screen {
      *
      * @param delta The time in seconds since the last render.
      */
-
-    /**
-    * Change play button's position and Reorganize background +added 1 gif background+
-     */
     @Override
     public void render(float delta) {
-        camera.position.set(playerPosition.x, playerPosition.y, 0);
-        camera.update();
-        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-        batch.draw(backgroundTexture, Gdx.graphics.getWidth()/-2, Gdx.graphics.getHeight()/-2, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.end();
+
         stage.act(delta);
         stage.draw();
     }
@@ -92,9 +80,7 @@ public class MenuScreen implements Screen {
      */
     @Override
     public void resize(int width, int height) {
-        camera.viewportWidth=width;
-        camera.viewportHeight=height;
-        camera.update();
+        stage.getViewport().update(width, height, true);
     }
 
     /**
@@ -125,6 +111,5 @@ public class MenuScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
-        backgroundTexture.dispose();
     }
 }
