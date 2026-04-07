@@ -8,14 +8,22 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import ieee.cs.isik.platformergaeme.AssetPair;
 
 public class MenuScreen implements Screen {
     private Stage stage = new Stage(new FillViewport(16 * 40,9*40));
+    public final AssetManager assets = new AssetManager();
+
+    private SpriteBatch debugBatch = new SpriteBatch();
+    private BitmapFont debugIndicator = new BitmapFont();
+
+    private boolean isStageBuild = false;
     /**
      * Called when this screen becomes the current screen for a {@link Game}.
      * Initializes the menu UI and input when this screen is shown.
@@ -27,11 +35,16 @@ public class MenuScreen implements Screen {
 
         // Set current input processor to the stage
         Gdx.input.setInputProcessor(stage);
+
+
+        for(AssetPair pair: getAssets())
+            if(!assets.isLoaded(pair.assetPath, pair.assetClass))
+                assets.load(pair.assetPath, pair.assetClass);
     }
 
     // Initialize the stage when new instance of MenuScreen created
-    {
-        Texture backgroundTexture = new Texture(Gdx.files.internal("favicon.jpg"));
+    private void buildStage() {
+        Texture backgroundTexture = assets.get("favicon.jpg", Texture.class);
 
         Image backgroundImage = new Image(backgroundTexture);
         backgroundImage.setFillParent(true);
@@ -39,8 +52,8 @@ public class MenuScreen implements Screen {
         stage.addActor(backgroundImage);
 
 
-        Texture singlePlayerButtonTexture = new Texture(Gdx.files.internal("favicon.jpg"));
-        Texture multiPlayerButtonTexture = new Texture(Gdx.files.internal("favicon.jpg")) ;
+        Texture singlePlayerButtonTexture = assets.get("favicon.jpg", Texture.class);
+        Texture multiPlayerButtonTexture = assets.get("favicon.jpg", Texture.class);
         TextButton.TextButtonStyle singlePlayerButtonStyle = new TextButton.TextButtonStyle(),
                                     multiplayerButtonStyle = new TextButton.TextButtonStyle();
 
@@ -74,6 +87,17 @@ public class MenuScreen implements Screen {
      */
     @Override
     public void render(float delta) {
+        if(assets.update()) { // returns true if all assets loaded
+            if(!isStageBuild) {
+                buildStage();
+                isStageBuild = true;
+            }
+        } else {
+            // Indicate that screen is loading.
+            debugBatch.begin();
+            debugIndicator.draw(debugBatch, "Loading", 0, 0);
+            debugBatch.end();
+        }
         /*
          * Clear previous frame
          * This will paint entire screen to the default color that we decided in show() with Gdx.gl20.glClearColor function
@@ -126,5 +150,12 @@ public class MenuScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        assets.dispose();
+    }
+
+    public AssetPair[] getAssets() {
+        return new AssetPair[] {
+            new AssetPair("favicon.jpg", Texture.class)
+        };
     }
 }
