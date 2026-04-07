@@ -9,12 +9,15 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import ieee.cs.isik.platformergaeme.AssetPair;
+import ieee.cs.isik.platformergaeme.GameManager;
 
 public class MenuScreen implements Screen {
     private Stage stage = new Stage(new FillViewport(16 * 40,9*40));
@@ -75,6 +78,22 @@ public class MenuScreen implements Screen {
         singlePlayerButton.setPosition(0, stage.getHeight()/2);
         singlePlayerButton.setHeight(stage.getHeight() / 6);
         singlePlayerButton.setWidth(stage.getWidth() / 5);
+
+        singlePlayerButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                GameManager.show(GameManager.ScreenType.GameType);
+            }
+        });
+
+        multiPlayerButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                GameManager.show(GameManager.ScreenType.GameType);
+            }
+        });
 
         stage.addActor(singlePlayerButton);
         stage.addActor(multiPlayerButton);
