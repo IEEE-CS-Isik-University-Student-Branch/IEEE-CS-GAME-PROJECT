@@ -22,11 +22,14 @@ public class MenuScreen implements Screen {
      */
     @Override
     public void show() {
+        // Set default background color
         Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.input.setInputProcessor(stage);
 
+        // Set current input processor to the stage
+        Gdx.input.setInputProcessor(stage);
     }
 
+    // Initialize the stage when new instance of MenuScreen created
     {
         Texture backgroundTexture = new Texture(Gdx.files.internal("favicon.jpg"));
 
@@ -71,13 +74,19 @@ public class MenuScreen implements Screen {
      */
     @Override
     public void render(float delta) {
+        /*
+         * Clear previous frame
+         * This will paint entire screen to the default color that we decided in show() with Gdx.gl20.glClearColor function
+         */
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // Update and draw GUI
         stage.act(delta);
         stage.draw();
     }
 
-    /**
+    /** Called when screen resized or when {@link Game#setScreen(Screen)} get called
+     *
      * @param width
      * @param height
      * @see ApplicationListener#resize(int, int)
@@ -87,14 +96,16 @@ public class MenuScreen implements Screen {
         stage.getViewport().update(width, height, true);
     }
 
-    /**
+    /** Called when application/screen paused
+     *
      * @see ApplicationListener#pause()
      */
     @Override
     public void pause() {
     }
 
-    /**
+    /** Called when application/screen resumed
+     *
      * @see ApplicationListener#resume()
      */
     @Override
