@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -55,29 +56,27 @@ public class MenuScreen implements Screen {
         stage.addActor(backgroundImage);
 
 
-        Texture singlePlayerButtonTexture = assets.get("favicon.jpg", Texture.class);
-        Texture multiPlayerButtonTexture = assets.get("favicon.jpg", Texture.class);
-        TextButton.TextButtonStyle singlePlayerButtonStyle = new TextButton.TextButtonStyle(),
-                                    multiplayerButtonStyle = new TextButton.TextButtonStyle();
+        TextureRegion mainButtonTextureUp = new TextureRegion(assets.get("Buttons.png", Texture.class), 3, 19 * 5 + 1, 9 * 5 - 3, 3 * 5 + 1);
+        TextureRegion mainButtonTextureDown = new TextureRegion(assets.get("Buttons.png", Texture.class), 10 * 5 + 0, 19 * 5 + 1, 9 * 5 - 3, 3 * 5 + 1);
+        TextureRegion mainButtonTextureHover = new TextureRegion(assets.get("Buttons.png", Texture.class), 3, 22 * 5 + 2, 9 * 5 - 3, 3 * 5 + 1);
 
-        singlePlayerButtonStyle.up = new TextureRegionDrawable(singlePlayerButtonTexture);
-        singlePlayerButtonStyle.down = new TextureRegionDrawable(singlePlayerButtonTexture);
-        singlePlayerButtonStyle.font = new BitmapFont();
+        TextButton.TextButtonStyle mainButtonStyle = new TextButton.TextButtonStyle();
 
-        multiplayerButtonStyle.up = new TextureRegionDrawable(multiPlayerButtonTexture);
-        multiplayerButtonStyle.down = new TextureRegionDrawable(multiPlayerButtonTexture);
-        multiplayerButtonStyle.font = new BitmapFont();
+        mainButtonStyle.up = new TextureRegionDrawable(mainButtonTextureUp);
+        mainButtonStyle.down = new TextureRegionDrawable(mainButtonTextureDown);
+        mainButtonStyle.over = new TextureRegionDrawable(mainButtonTextureHover);
+        mainButtonStyle.font = new BitmapFont();
 
-        TextButton singlePlayerButton = new TextButton("Single Player", singlePlayerButtonStyle);
-        TextButton multiPlayerButton = new TextButton("Multi Player", multiplayerButtonStyle);
+        TextButton singlePlayerButton = new TextButton("Single Player", mainButtonStyle);
+        TextButton multiPlayerButton = new TextButton("Multi Player", mainButtonStyle);
 
-        multiPlayerButton.setPosition(0, stage.getHeight()/3);
-        multiPlayerButton.setHeight(stage.getHeight() / 6);
-        multiPlayerButton.setWidth(stage.getWidth() / 5);
+        multiPlayerButton.setPosition(16 * 20, 9 * 20  - 16 * 4);
+        multiPlayerButton.setHeight(16  * 3);
+        multiPlayerButton.setWidth(42 * 3);
 
-        singlePlayerButton.setPosition(0, stage.getHeight()/2);
-        singlePlayerButton.setHeight(stage.getHeight() / 6);
-        singlePlayerButton.setWidth(stage.getWidth() / 5);
+        singlePlayerButton.setPosition(16 * 20, 9 * 20);
+        singlePlayerButton.setHeight(16  * 3);
+        singlePlayerButton.setWidth(42 * 3);
 
         singlePlayerButton.addListener(new ClickListener() {
             @Override
@@ -114,7 +113,7 @@ public class MenuScreen implements Screen {
         } else {
             // Indicate that screen is loading.
             debugBatch.begin();
-            debugIndicator.draw(debugBatch, "Loading", 0, 0);
+            debugIndicator.draw(debugBatch, "Loading...", 0, 0);
             debugBatch.end();
         }
         /*
@@ -174,7 +173,8 @@ public class MenuScreen implements Screen {
 
     public AssetPair[] getAssets() {
         return new AssetPair[] {
-            new AssetPair("favicon.jpg", Texture.class)
+            new AssetPair("favicon.jpg", Texture.class),
+            new AssetPair("Buttons.png", Texture.class)
         };
     }
 }
