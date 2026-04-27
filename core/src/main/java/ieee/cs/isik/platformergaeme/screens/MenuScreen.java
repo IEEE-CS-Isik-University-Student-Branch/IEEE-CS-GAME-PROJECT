@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -48,17 +47,9 @@ public class MenuScreen implements Screen {
 
     // Initialize the stage when new instance of MenuScreen created
     private void buildStage() {
-        Texture backgroundTexture = assets.get("favicon.jpg", Texture.class);
-
-        Image backgroundImage = new Image(backgroundTexture);
-        backgroundImage.setFillParent(true);
-        backgroundImage.setSize(stage.getWidth(), stage.getHeight());
-        stage.addActor(backgroundImage);
-
-
-        TextureRegion mainButtonTextureUp = new TextureRegion(assets.get("Buttons.png", Texture.class), 3, 19 * 5 + 1, 9 * 5 - 3, 3 * 5 + 1);
-        TextureRegion mainButtonTextureDown = new TextureRegion(assets.get("Buttons.png", Texture.class), 10 * 5 + 0, 19 * 5 + 1, 9 * 5 - 3, 3 * 5 + 1);
-        TextureRegion mainButtonTextureHover = new TextureRegion(assets.get("Buttons.png", Texture.class), 3, 22 * 5 + 2, 9 * 5 - 3, 3 * 5 + 1);
+        TextureRegion mainButtonTextureUp = new TextureRegion(assets.get("UI/Buttons.png", Texture.class), 3, 19 * 5 + 1, 9 * 5 - 3, 3 * 5 + 1);
+        TextureRegion mainButtonTextureDown = new TextureRegion(assets.get("UI/Buttons.png", Texture.class), 10 * 5 + 0, 19 * 5 + 1, 9 * 5 - 3, 3 * 5 + 1);
+        TextureRegion mainButtonTextureHover = new TextureRegion(assets.get("UI/Buttons.png", Texture.class), 3, 22 * 5 + 2, 9 * 5 - 3, 3 * 5 + 1);
 
         TextButton.TextButtonStyle mainButtonStyle = new TextButton.TextButtonStyle();
 
@@ -173,8 +164,7 @@ public class MenuScreen implements Screen {
 
     public AssetPair[] getAssets() {
         return new AssetPair[] {
-            new AssetPair("favicon.jpg", Texture.class),
-            new AssetPair("Buttons.png", Texture.class)
+            new AssetPair("UI/Buttons.png", Texture.class)
         };
     }
 }
