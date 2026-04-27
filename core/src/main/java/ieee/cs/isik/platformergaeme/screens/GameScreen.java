@@ -35,7 +35,7 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         /*
-         * Clear previous screen
+         * Clear previous frame
          * This will paint entire screen to the default color that we decided in show() with Gdx.gl20.glClearColor function
          */
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -48,7 +48,8 @@ public class GameScreen implements Screen {
         );
     }
 
-    /**
+    /** Called when screen resized or when {@link Game#setScreen(Screen)} get called
+     *
      * @param width is Width of the screen in pixels
      * @param height is Height of the screen in pixels
      * @see ApplicationListener#resize(int, int)
@@ -58,7 +59,8 @@ public class GameScreen implements Screen {
 
     }
 
-    /**
+    /** Called when application/screen paused
+     *
      * @see ApplicationListener#pause()
      */
     @Override
@@ -66,7 +68,8 @@ public class GameScreen implements Screen {
 
     }
 
-    /**
+    /** Called when application/screen resumed
+     *
      * @see ApplicationListener#resume()
      */
     @Override

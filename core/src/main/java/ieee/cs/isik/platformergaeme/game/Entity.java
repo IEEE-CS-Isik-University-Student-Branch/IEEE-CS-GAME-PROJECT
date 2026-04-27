@@ -16,7 +16,6 @@ public abstract class Entity extends IEntity implements Disposable {
     /// Every entity should have a body so they can interact with each other physically
     @NotNull
     public final Body body;
-
     /// Holds color filter and Texture data(s) for render
     @NotNull
     public Material material;
