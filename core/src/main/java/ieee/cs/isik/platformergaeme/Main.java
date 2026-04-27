@@ -21,10 +21,24 @@ public class Main extends Game {
         // Set process name (Name of the window in desktop/laptop or name of the app in mobile)
         Gdx.graphics.setTitle("IEEE CS Ekibi Mario");
 
-        // Set window size
-        Gdx.graphics.setWindowedMode(640, 480);
+        // Force window to fullscreen
+        Gdx.graphics.setFullscreenMode(
+            Gdx.graphics.getDisplayMode(
+                Gdx.graphics.getMonitor()
+            )
+        );
 
         // Show default to GameScreen screen till we start MenuScreen
         GameManager.show(GameManager.ScreenType.MenuType);
     }
-}
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+
+        // Force window to fullscreen
+        Gdx.graphics.setFullscreenMode(
+            Gdx.graphics.getDisplayMode(
+                Gdx.graphics.getMonitor()
+            )
+        );
+    }}
