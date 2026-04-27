@@ -61,11 +61,11 @@ public class MenuScreen implements Screen {
         TextButton singlePlayerButton = new TextButton("Single Player", mainButtonStyle);
         TextButton multiPlayerButton = new TextButton("Multi Player", mainButtonStyle);
 
-        multiPlayerButton.setPosition(16 * 20, 9 * 20  - 16 * 4);
+        multiPlayerButton.setPosition(0, 9 * 20  - 16 * 4);
         multiPlayerButton.setHeight(16  * 3);
         multiPlayerButton.setWidth(42 * 3);
 
-        singlePlayerButton.setPosition(16 * 20, 9 * 20);
+        singlePlayerButton.setPosition(0, 9 * 20);
         singlePlayerButton.setHeight(16  * 3);
         singlePlayerButton.setWidth(42 * 3);
 
