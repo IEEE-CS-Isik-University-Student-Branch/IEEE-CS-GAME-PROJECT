@@ -5,6 +5,10 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -13,6 +17,11 @@ public class GameScreen implements Screen {
     /** This {@link World} object is part of the physics engine 'box2d'
      * @see World
      */
+
+    TiledMap harita = new TmxMapLoader().load("adsız.tmx");;
+    OrthogonalTiledMapRenderer map = new OrthogonalTiledMapRenderer(harita);
+    OrthographicCamera camera = new OrthographicCamera();
+
     public final World physicsWorld = new World(
         new Vector2(0, -9.8f), // Default gravity of the World, 9.8 m / s^2 to the down
         true // Allow sleep state, this will ignore in active bodies which is going to improve  game performance
@@ -46,6 +55,9 @@ public class GameScreen implements Screen {
             6, // Since the game not going to have high speed entities this much of velocity iteration is enough
             2 // If entities gets conflict so much we must increase position iterations.
         );
+
+        map.setView(camera);
+        map.render();
     }
 
     /**
@@ -55,7 +67,8 @@ public class GameScreen implements Screen {
      */
     @Override
     public void resize(int width, int height) {
-
+        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.update();
     }
 
     /**
