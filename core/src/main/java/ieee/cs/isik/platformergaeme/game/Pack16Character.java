@@ -42,6 +42,7 @@ public enum Pack16Character implements Character {
 
     private Material getMaterial(final AssetManager assets) {
         Texture atlas = assets.get(String.format("/16_Character_Pack/%1$s.png", skin_name), Texture.class);
+        Texture atlas = new Texture(String.format("16_Character_Pack/%1$s.png", skin_name));
         int frameWidth = atlas.getWidth() / 4;
         int frameHeight = atlas.getHeight() / 4;
         TextureRegion[][] frames = new TextureRegion(atlas).split(frameWidth, frameHeight);
