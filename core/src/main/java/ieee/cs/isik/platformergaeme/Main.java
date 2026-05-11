@@ -3,7 +3,6 @@ package ieee.cs.isik.platformergaeme;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 
-
 /**
  * When Game get created, {@link Main#create()} function gets called. In this function we define {@link GameManager#game} to current {@link Main}
  *
@@ -18,6 +17,7 @@ public class Main extends Game {
          * Set this 'Game' object as global 'Game' object of GameManager
          */
         GameManager.game = this;
+
         // Set process name (Name of the window in desktop/laptop or name of the app in mobile)
         Gdx.graphics.setTitle("IEEE CS Ekibi Mario");
 
