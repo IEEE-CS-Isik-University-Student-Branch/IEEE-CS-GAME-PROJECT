@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class StateMaterial extends Material {
 
     public final ArrayList<Material> materials = new ArrayList<>();
-    private final HashMap<Integer, Integer> stateIndexes = new HashMap<>();
+    public final HashMap<Integer, Integer> stateIndexes = new HashMap<>();
     public int state = 0;
 
     @Override
