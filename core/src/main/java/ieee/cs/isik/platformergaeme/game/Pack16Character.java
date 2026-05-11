@@ -52,9 +52,11 @@ public enum Pack16Character implements Character {
         TextureRegion jumpFrame = frames[0][1];
 
         Animation<TextureRegion> idleAnimation = new Animation<>(1f, idleFrames);
+        idleAnimation.setPlayMode(Animation.PlayMode.LOOP);
         AnimationMaterial idleMat = new AnimationMaterial(idleAnimation);
 
         Animation<TextureRegion> walkAnimation = new Animation<>(1f, walkFrames);
+        walkAnimation.setPlayMode(Animation.PlayMode.LOOP);
         AnimationMaterial walkMat = new AnimationMaterial(walkAnimation);
 
         TextureMaterial jumpMat = new TextureMaterial(jumpFrame);
