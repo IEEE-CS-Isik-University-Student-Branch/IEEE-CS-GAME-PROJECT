@@ -10,7 +10,21 @@ import org.jetbrains.annotations.NotNull;
 public enum Character {
     C_12("12"),
     C_ALIEN("Alien"),
-    C_GANDAL("Gandal");
+    C_BANDITO("Bandito"),
+    C_BEETLEJUIX("BeetleJuix"),
+    C_DRACULA("Dracula"),
+    C_FREDDY_K("Freddy K"),
+    C_GANDAL("Gandal"),
+    C_HARLEY_QUEEN("Harley Queen"),
+    C_JODA("Joda"),
+    C_JOKE("Joke"),
+    C_MARTY_MC("Marty Mc"),
+    C_PUNPKIN("PunpKin"),
+    C_SICARIO("Sicario"),
+    C_SUORA("Suora"),
+    C_TERMİNX("Terminx"),
+    C_TREEPWOO("TreepWoo")
+    ;
 
     final String skin_name;
 
@@ -26,7 +40,7 @@ public enum Character {
     }
 
     private Material getMaterial(final AssetManager assets) {
-        Texture atlas = assets.get(String.format("/16_Charter_Game/%1$s/%1$s.png", skin_name), Texture.class);
+        Texture atlas = assets.get(String.format("/16_Charter_Game/%1$s.png", skin_name), Texture.class);
         int frameWidth = atlas.getWidth() / 4;
         int frameHeight = atlas.getHeight() / 4;
         TextureRegion[][] frames = new TextureRegion(atlas).split(frameWidth, frameHeight);
