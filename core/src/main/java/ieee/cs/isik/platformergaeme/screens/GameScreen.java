@@ -17,7 +17,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import ieee.cs.isik.platformergaeme.game.CharacterEntity;
 import ieee.cs.isik.platformergaeme.game.Pack16Character;
-
+import ieee.cs.isik.platformergaeme.GameManager;
 import java.util.LinkedList;
 
 public class GameScreen implements Screen {
@@ -36,7 +36,6 @@ public class GameScreen implements Screen {
         true // Allow sleep state, this will ignore in active bodies which is going to improve  game performance
     );
 
-    public final static float meter2pixel = 100;
 
     final LinkedList<ieee.cs.isik.platformergaeme.game.Entity> entities = new LinkedList<ieee.cs.isik.platformergaeme.game.Entity>();
 
@@ -54,6 +53,11 @@ public class GameScreen implements Screen {
         for(ieee.cs.isik.platformergaeme.AssetPair pair: getAssets())
             if(!assets.isLoaded(pair.assetPath, pair.assetClass))
                 assets.load(pair.assetPath, pair.assetClass);
+
+        var prop = map.getMap().getProperties();
+        float meters2PixelsRatio = prop.get("tileheight", Integer.class);
+        GameManager.setMeter2PixelsRatio(meters2PixelsRatio);
+
     }
 
     /**
@@ -96,7 +100,13 @@ public class GameScreen implements Screen {
             mat.act(delta);
             final Vector2 pos = entity.body.getPosition();
             TextureRegion texture = mat.getFrame();
-            batch.draw(mat.getFrame(), pos.x * meter2pixel, pos.y * meter2pixel, texture.getRegionWidth() * zoomRatio * 2, texture.getRegionHeight() * zoomRatio * 2);
+
+            float whRatio = (float)texture.getRegionWidth()  / texture.getRegionHeight();
+
+            float height = GameManager.getCharacterHeightInPixels();
+            float width = height * whRatio;
+
+            batch.draw(mat.getFrame(), pos.x * GameManager.getMeter2PixelsRatio(), pos.y * GameManager.getMeter2PixelsRatio(), width, height);
         }
         batch.end();
     }
