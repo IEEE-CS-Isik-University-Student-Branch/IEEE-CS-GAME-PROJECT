@@ -4,13 +4,21 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
+import ieee.cs.isik.platformergaeme.game.CharacterEntity;
+import ieee.cs.isik.platformergaeme.game.Pack16Character;
+
+import java.util.LinkedList;
 
 public class GameScreen implements Screen {
 
@@ -20,6 +28,7 @@ public class GameScreen implements Screen {
 
     TiledMap harita = new TmxMapLoader().load("adsız.tmx");;
     OrthogonalTiledMapRenderer map = new OrthogonalTiledMapRenderer(harita);
+    float zoomRatio = 1.5f;
     OrthographicCamera camera = new OrthographicCamera();
 
     public final World physicsWorld = new World(
@@ -27,6 +36,13 @@ public class GameScreen implements Screen {
         true // Allow sleep state, this will ignore in active bodies which is going to improve  game performance
     );
 
+    public final static float meter2pixel = 100;
+
+    final LinkedList<ieee.cs.isik.platformergaeme.game.Entity> entities = new LinkedList<ieee.cs.isik.platformergaeme.game.Entity>();
+
+    SpriteBatch batch = new SpriteBatch();
+
+    AssetManager assets = new AssetManager();
     /**
      * Called when this screen becomes the current screen for a {@link Game}.
      */
@@ -34,6 +50,10 @@ public class GameScreen implements Screen {
     public void show() {
         // Set default background color
         Gdx.gl20.glClearColor(0, 0, 0, 1);
+
+        for(ieee.cs.isik.platformergaeme.AssetPair pair: getAssets())
+            if(!assets.isLoaded(pair.assetPath, pair.assetClass))
+                assets.load(pair.assetPath, pair.assetClass);
     }
 
     /**
@@ -43,6 +63,16 @@ public class GameScreen implements Screen {
      */
     @Override
     public void render(float delta) {
+        if(!assets.update()) {
+            /* Loading */
+            return;
+        } else {
+            if(entities.isEmpty()) {
+                CharacterEntity myChar = addMainChar();
+                myChar.body.getPosition().set(100f, 100f);
+            }
+        }
+
         /*
          * Clear previous frame
          * This will paint entire screen to the default color that we decided in show() with Gdx.gl20.glClearColor function
@@ -58,6 +88,17 @@ public class GameScreen implements Screen {
 
         map.setView(camera);
         map.render();
+
+        batch.setProjectionMatrix(camera.projection);
+        batch.begin();
+        for(ieee.cs.isik.platformergaeme.game.Entity entity: entities) {
+            ieee.cs.isik.platformergaeme.game.Material mat = entity.material;
+            mat.act(delta);
+            final Vector2 pos = entity.body.getPosition();
+            TextureRegion texture = mat.getFrame();
+            batch.draw(mat.getFrame(), pos.x * meter2pixel, pos.y * meter2pixel, texture.getRegionWidth() * zoomRatio * 2, texture.getRegionHeight() * zoomRatio * 2);
+        }
+        batch.end();
     }
 
     /** Called when screen resized or when {@link Game#setScreen(Screen)} get called
@@ -68,7 +109,7 @@ public class GameScreen implements Screen {
      */
     @Override
     public void resize(int width, int height) {
-        camera.setToOrtho(false, Gdx.graphics.getWidth()*3, Gdx.graphics.getHeight()*3);
+        camera.setToOrtho(false, Gdx.graphics.getWidth()*zoomRatio, Gdx.graphics.getHeight()*zoomRatio);
         camera.update();
     }
 
@@ -104,5 +145,30 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         physicsWorld.dispose();
+    }
+
+    public CharacterEntity addMainChar() {
+
+        BodyDef def = new BodyDef();
+        def.type = BodyDef.BodyType.DynamicBody;
+        Body body = physicsWorld.createBody(def);
+
+        Fixture Fix = body.createFixture(new CircleShape(), 1f);
+
+        CharacterEntity myChar = Pack16Character.C_PUNPKIN.loadEntity(
+            assets,
+            0,
+            body
+        );
+
+        entities.add(myChar);
+
+        return myChar;
+    }
+
+    public ieee.cs.isik.platformergaeme.AssetPair[] getAssets() {
+        return new ieee.cs.isik.platformergaeme.AssetPair[] {
+            new ieee.cs.isik.platformergaeme.AssetPair("16_Character_Pack/PunpKin.png", Texture.class)
+        };
     }
 }
