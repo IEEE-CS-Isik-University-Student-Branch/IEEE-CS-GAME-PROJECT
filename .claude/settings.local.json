@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\berkan\\\\Documents\\\\IEEE-CS-Project\" -Recurse -File)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(git ls-tree *)",
+      "Bash(grep \"\\\\.java$\")",
+      "Bash(powershell -command \"Select-String -Path 'assets/adsız.tmx' -Pattern '<layer|<objectgroup|<imagelayer' | Select-Object -First 20\")",
+      "Bash(powershell -command \"Select-String -Path 'assets/adsız.tmx' -Pattern '<objectgroup' | Select-Object -First 10\")",
+      "Bash(powershell -command \"Get-Content 'assets/adsız.tmx' | Select-String '703|401|400|699|700' | Select-Object -First 10\")",
+      "Bash(powershell -command ' *)",
+      "Bash(mkdir -p /c/Users/berkan/Documents/IEEE-CS-Project/core/src/main/java/ieee/cs/isik/platformergaeme/engine)",
+      "Bash(mkdir -p /c/Users/berkan/Documents/IEEE-CS-Project/core/src/main/java/ieee/cs/isik/platformergaeme/player)",
+      "Bash(python3 *)",
+      "Bash(/usr/bin/python3 *)",
+      "Read(//usr/**)",
+      "Read(//usr/local/**)",
+      "Bash(./gradlew.bat lwjgl3:compileJava)",
+      "Bash(cmd /c \"gradlew.bat lwjgl3:compileJava 2>&1\")",
+      "Bash(cmd /c \"gradlew.bat clean :core:compileJava\")",
+      "Bash(echo \"Exit: $?\")",
+      "Bash(cmd /c \"gradlew.bat clean :core:compileJava > build_output.txt 2>&1\")",
+      "Bash(powershell -command \"& .\\\\gradlew.bat clean ':core:compileJava' 2>&1 | Tee-Object -FilePath 'build_output.txt'; Get-Content 'build_output.txt' | Select-Object -Last 40\")",
+      "Bash(./gradlew desktop:run)",
+      "Bash(./gradlew projects *)",
+      "Bash(./gradlew lwjgl3:run)",
+      "Bash(python *)"
+    ]
+  }
+}
