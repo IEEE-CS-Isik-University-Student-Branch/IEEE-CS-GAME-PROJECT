@@ -158,6 +158,12 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         physicsWorld.dispose();
+        for(ieee.cs.isik.platformergaeme.game.Entity e: entities)
+            e.dispose();
+        harita.dispose();
+        map.dispose();
+        physicsWorld.dispose();
+        assets.dispose();
     }
 
     public CharacterEntity addMainChar() {
