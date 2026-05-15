@@ -1,9 +1,14 @@
 package ieee.cs.isik.platformergaeme.game;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import org.jetbrains.annotations.NotNull;
 
 public interface Character {
+    /**
+     * Box size in pixels
+     */
+    public static final Vector2 boxSize = new Vector2(100, 100);
     public CharacterEntity loadEntity(final AssetManager assets, final int id, @NotNull Body body);
 }
