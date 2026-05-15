@@ -28,8 +28,11 @@ public class GameScreen implements Screen {
 
     TiledMap harita = new TmxMapLoader().load("adsız.tmx");;
     OrthogonalTiledMapRenderer map = new OrthogonalTiledMapRenderer(harita);
-    float zoomRatio = 1.5f;
     OrthographicCamera camera = new OrthographicCamera();
+    {
+        camera.zoom = 1.5f;
+        camera.update();
+    }
 
     public final World physicsWorld = new World(
         new Vector2(0, -9.8f), // Default gravity of the World, 9.8 m / s^2 to the down
@@ -119,7 +122,7 @@ public class GameScreen implements Screen {
      */
     @Override
     public void resize(int width, int height) {
-        camera.setToOrtho(false, Gdx.graphics.getWidth()*zoomRatio, Gdx.graphics.getHeight()*zoomRatio);
+        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.update();
     }
 
