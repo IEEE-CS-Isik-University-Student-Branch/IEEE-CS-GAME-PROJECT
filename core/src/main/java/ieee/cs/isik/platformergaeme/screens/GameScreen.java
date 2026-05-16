@@ -82,7 +82,7 @@ public class GameScreen implements Screen {
         } else {
             if(entities.isEmpty()) {
                 CharacterEntity myChar = addMainChar();
-                myChar.body.getPosition().set(100f, 100f);
+                myChar.body.setTransform(5f, 5f, 0);
             }
         }
 
@@ -183,7 +183,9 @@ public class GameScreen implements Screen {
         def.type = BodyDef.BodyType.DynamicBody;
         Body body = physicsWorld.createBody(def);
 
-        Fixture Fix = body.createFixture(new CircleShape(), 1f);
+        Shape circle = new CircleShape();
+        circle.setRadius(GameManager.getCharacterHeightInPixels() / GameManager.getMeter2PixelsRatio() / 2);
+        Fixture Fix = body.createFixture(circle, 1f);
 
         CharacterEntity myChar = Pack16Character.C_PUNPKIN.loadEntity(
             assets,
