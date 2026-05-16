@@ -39,6 +39,12 @@ public class GameScreen implements Screen {
         true // Allow sleep state, this will ignore in active bodies which is going to improve  game performance
     );
 
+    Box2DDebugRenderer box2DDebugRenderer = new Box2DDebugRenderer();
+    {
+        box2DDebugRenderer.setDrawBodies(true);
+        box2DDebugRenderer.setDrawJoints(true);
+    }
+
 
     final LinkedList<ieee.cs.isik.platformergaeme.game.Entity> entities = new LinkedList<ieee.cs.isik.platformergaeme.game.Entity>();
 
@@ -76,7 +82,7 @@ public class GameScreen implements Screen {
         } else {
             if(entities.isEmpty()) {
                 CharacterEntity myChar = addMainChar();
-                myChar.body.getPosition().set(100f, 100f);
+                myChar.body.setTransform(5f, 5f, 0);
             }
         }
 
@@ -96,7 +102,7 @@ public class GameScreen implements Screen {
         map.setView(camera);
         map.render();
 
-        batch.setProjectionMatrix(camera.projection);
+        batch.setProjectionMatrix(camera.combined);
         batch.begin();
         for(ieee.cs.isik.platformergaeme.game.Entity entity: entities) {
             ieee.cs.isik.platformergaeme.game.Material mat = entity.material;
@@ -109,9 +115,16 @@ public class GameScreen implements Screen {
             float height = GameManager.getCharacterHeightInPixels();
             float width = height * whRatio;
 
-            batch.draw(mat.getFrame(), pos.x * GameManager.getMeter2PixelsRatio(), pos.y * GameManager.getMeter2PixelsRatio(), width, height);
+            float halfW = width / 2,
+                halfH = height / 2;
+
+            batch.draw(mat.getFrame(), pos.x * GameManager.getMeter2PixelsRatio() - halfW, pos.y * GameManager.getMeter2PixelsRatio() - halfH, width, height);
         }
         batch.end();
+
+        com.badlogic.gdx.math.Matrix4 debugMatrix = new com.badlogic.gdx.math.Matrix4(camera.combined);
+        debugMatrix.scale(GameManager.getMeter2PixelsRatio(), GameManager.getMeter2PixelsRatio(), 1f);
+        box2DDebugRenderer.render(physicsWorld, debugMatrix);
     }
 
     /** Called when screen resized or when {@link Game#setScreen(Screen)} get called
@@ -122,7 +135,7 @@ public class GameScreen implements Screen {
      */
     @Override
     public void resize(int width, int height) {
-        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.setToOrtho(false, width, height);
         camera.update();
     }
 
@@ -164,6 +177,7 @@ public class GameScreen implements Screen {
         map.dispose();
         physicsWorld.dispose();
         assets.dispose();
+        box2DDebugRenderer.dispose();
     }
 
     public CharacterEntity addMainChar() {
@@ -172,7 +186,9 @@ public class GameScreen implements Screen {
         def.type = BodyDef.BodyType.DynamicBody;
         Body body = physicsWorld.createBody(def);
 
-        Fixture Fix = body.createFixture(new CircleShape(), 1f);
+        Shape circle = new CircleShape();
+        circle.setRadius(GameManager.getCharacterHeightInPixels() / GameManager.getMeter2PixelsRatio() / 2);
+        Fixture Fix = body.createFixture(circle, 1f);
 
         CharacterEntity myChar = Pack16Character.C_PUNPKIN.loadEntity(
             assets,
