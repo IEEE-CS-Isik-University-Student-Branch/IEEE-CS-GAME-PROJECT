@@ -102,7 +102,7 @@ public class GameScreen implements Screen {
         map.setView(camera);
         map.render();
 
-        batch.setProjectionMatrix(camera.projection);
+        batch.setProjectionMatrix(camera.combined);
         batch.begin();
         for(ieee.cs.isik.platformergaeme.game.Entity entity: entities) {
             ieee.cs.isik.platformergaeme.game.Material mat = entity.material;
