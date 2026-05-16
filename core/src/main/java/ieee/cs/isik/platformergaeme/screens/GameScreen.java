@@ -115,7 +115,10 @@ public class GameScreen implements Screen {
             float height = GameManager.getCharacterHeightInPixels();
             float width = height * whRatio;
 
-            batch.draw(mat.getFrame(), pos.x * GameManager.getMeter2PixelsRatio(), pos.y * GameManager.getMeter2PixelsRatio(), width, height);
+            float halfW = width / 2,
+                halfH = height / 2;
+
+            batch.draw(mat.getFrame(), pos.x * GameManager.getMeter2PixelsRatio() - halfW, pos.y * GameManager.getMeter2PixelsRatio() - halfH, width, height);
         }
         batch.end();
 
