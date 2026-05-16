@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -29,14 +28,14 @@ public class GameScreen implements Screen {
      * @see World
      */
 
-    TiledMap harita = new TmxMapLoader().load("adsız.tmx");
+    TiledMap map = new TmxMapLoader().load("adsız.tmx");
     {
-        var prop = harita.getProperties();
+        var prop = map.getProperties();
         float meters2PixelsRatio = prop.get("tileheight", Integer.class);
         GameManager.setMeter2PixelsRatio(meters2PixelsRatio);
 
     }
-    OrthogonalTiledMapRenderer map = new OrthogonalTiledMapRenderer(harita);
+    OrthogonalTiledMapRenderer mapRenderer = new OrthogonalTiledMapRenderer(map);
     OrthographicCamera camera = new OrthographicCamera();
     {
         camera.zoom = 1.5f;
@@ -48,7 +47,7 @@ public class GameScreen implements Screen {
         true // Allow sleep state, this will ignore in active bodies which is going to improve  game performance
     );
     {
-        for (com.badlogic.gdx.maps.tiled.TiledMapTileLayer layer : harita.getLayers().getByType(com.badlogic.gdx.maps.tiled.TiledMapTileLayer.class)) {
+        for (com.badlogic.gdx.maps.tiled.TiledMapTileLayer layer : map.getLayers().getByType(com.badlogic.gdx.maps.tiled.TiledMapTileLayer.class)) {
 
             for (int col = 0; col < layer.getWidth(); col++) {
                 for (int row = 0; row < layer.getHeight(); row++) {
@@ -132,8 +131,8 @@ public class GameScreen implements Screen {
             2 // If entities gets conflict so much we must increase position iterations.
         );
 
-        map.setView(camera);
-        map.render();
+        mapRenderer.setView(camera);
+        mapRenderer.render();
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -206,8 +205,8 @@ public class GameScreen implements Screen {
         physicsWorld.dispose();
         for(ieee.cs.isik.platformergaeme.game.Entity e: entities)
             e.dispose();
-        harita.dispose();
-        map.dispose();
+        mapRenderer.dispose();
+        mapRenderer.dispose();
         physicsWorld.dispose();
         assets.dispose();
         box2DDebugRenderer.dispose();
