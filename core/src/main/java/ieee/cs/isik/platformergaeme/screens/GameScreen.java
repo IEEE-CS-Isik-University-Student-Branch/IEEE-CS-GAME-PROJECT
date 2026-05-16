@@ -122,7 +122,7 @@ public class GameScreen implements Screen {
      */
     @Override
     public void resize(int width, int height) {
-        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.setToOrtho(false, width, height);
         camera.update();
     }
 
