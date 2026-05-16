@@ -48,4 +48,20 @@ public class GameManager {
                 break;
         }
     }
+
+    private final static float characterHeightInMeters=1.8f;
+    private static float meter2PixelsRatio=0, characterHeightInPixels;
+
+    public static void setMeter2PixelsRatio(float r) {
+        meter2PixelsRatio = r;
+        characterHeightInPixels = characterHeightInMeters * r;
+    }
+
+    public static float getMeter2PixelsRatio() {
+        return meter2PixelsRatio;
+    }
+
+    public static float getCharacterHeightInPixels() {
+        return characterHeightInPixels;
+    }
 }
