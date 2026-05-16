@@ -12,13 +12,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import ieee.cs.isik.platformergaeme.game.CharacterEntity;
 import ieee.cs.isik.platformergaeme.game.Pack16Character;
 import ieee.cs.isik.platformergaeme.GameManager;
 import ieee.cs.isik.platformergaeme.game.StateMaterial;
+import ieee.cs.isik.platformergaeme.game.MapManager;
+import ieee.cs.isik.platformergaeme.game.mapmanagers.TestMap;
 
 import java.util.LinkedList;
 
@@ -35,12 +36,14 @@ public class GameScreen implements Screen {
         GameManager.setMeter2PixelsRatio(meters2PixelsRatio);
 
     }
-    OrthogonalTiledMapRenderer mapRenderer = new OrthogonalTiledMapRenderer(map);
+
     OrthographicCamera camera = new OrthographicCamera();
     {
         camera.zoom = 1.5f;
         camera.update();
     }
+
+    MapManager mapManager = new TestMap(map, camera);
 
     public final World physicsWorld = new World(
         new Vector2(0, -9.8f), // Default gravity of the World, 9.8 m / s^2 to the down
@@ -131,8 +134,7 @@ public class GameScreen implements Screen {
             2 // If entities gets conflict so much we must increase position iterations.
         );
 
-        mapRenderer.setView(camera);
-        mapRenderer.render();
+        mapManager.render(delta);
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -205,8 +207,7 @@ public class GameScreen implements Screen {
         physicsWorld.dispose();
         for(ieee.cs.isik.platformergaeme.game.Entity e: entities)
             e.dispose();
-        mapRenderer.dispose();
-        mapRenderer.dispose();
+        mapManager.dispose();
         physicsWorld.dispose();
         assets.dispose();
         box2DDebugRenderer.dispose();
