@@ -39,6 +39,12 @@ public class GameScreen implements Screen {
         true // Allow sleep state, this will ignore in active bodies which is going to improve  game performance
     );
 
+    Box2DDebugRenderer box2DDebugRenderer = new Box2DDebugRenderer();
+    {
+        box2DDebugRenderer.setDrawBodies(true);
+        box2DDebugRenderer.setDrawJoints(true);
+    }
+
 
     final LinkedList<ieee.cs.isik.platformergaeme.game.Entity> entities = new LinkedList<ieee.cs.isik.platformergaeme.game.Entity>();
 
@@ -112,6 +118,10 @@ public class GameScreen implements Screen {
             batch.draw(mat.getFrame(), pos.x * GameManager.getMeter2PixelsRatio(), pos.y * GameManager.getMeter2PixelsRatio(), width, height);
         }
         batch.end();
+
+        com.badlogic.gdx.math.Matrix4 debugMatrix = new com.badlogic.gdx.math.Matrix4(camera.combined);
+        debugMatrix.scale(GameManager.getMeter2PixelsRatio(), GameManager.getMeter2PixelsRatio(), 1f);
+        box2DDebugRenderer.render(physicsWorld, debugMatrix);
     }
 
     /** Called when screen resized or when {@link Game#setScreen(Screen)} get called
@@ -164,6 +174,7 @@ public class GameScreen implements Screen {
         map.dispose();
         physicsWorld.dispose();
         assets.dispose();
+        box2DDebugRenderer.dispose();
     }
 
     public CharacterEntity addMainChar() {
