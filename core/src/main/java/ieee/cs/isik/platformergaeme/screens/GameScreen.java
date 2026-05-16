@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -18,6 +19,8 @@ import com.badlogic.gdx.physics.box2d.*;
 import ieee.cs.isik.platformergaeme.game.CharacterEntity;
 import ieee.cs.isik.platformergaeme.game.Pack16Character;
 import ieee.cs.isik.platformergaeme.GameManager;
+import ieee.cs.isik.platformergaeme.game.StateMaterial;
+
 import java.util.LinkedList;
 
 public class GameScreen implements Screen {
@@ -26,7 +29,13 @@ public class GameScreen implements Screen {
      * @see World
      */
 
-    TiledMap harita = new TmxMapLoader().load("adsız.tmx");;
+    TiledMap harita = new TmxMapLoader().load("adsız.tmx");
+    {
+        var prop = harita.getProperties();
+        float meters2PixelsRatio = prop.get("tileheight", Integer.class);
+        GameManager.setMeter2PixelsRatio(meters2PixelsRatio);
+
+    }
     OrthogonalTiledMapRenderer map = new OrthogonalTiledMapRenderer(harita);
     OrthographicCamera camera = new OrthographicCamera();
     {
@@ -38,6 +47,35 @@ public class GameScreen implements Screen {
         new Vector2(0, -9.8f), // Default gravity of the World, 9.8 m / s^2 to the down
         true // Allow sleep state, this will ignore in active bodies which is going to improve  game performance
     );
+    {
+        for (com.badlogic.gdx.maps.tiled.TiledMapTileLayer layer : harita.getLayers().getByType(com.badlogic.gdx.maps.tiled.TiledMapTileLayer.class)) {
+
+            for (int col = 0; col < layer.getWidth(); col++) {
+                for (int row = 0; row < layer.getHeight(); row++) {
+                    var cell = layer.getCell(col, row);
+
+                    if (cell != null && cell.getTile() != null) {
+
+                        float x = col + 0.5f;
+                        float y = row + 0.5f;
+
+                        BodyDef bodyDef = new BodyDef();
+                        bodyDef.type = BodyDef.BodyType.StaticBody;
+                        bodyDef.position.set(x, y);
+                        bodyDef.fixedRotation = true;
+
+                        Body body = physicsWorld.createBody(bodyDef);
+
+                        PolygonShape shape = new PolygonShape();
+                        shape.setAsBox(0.5f, 0.5f);
+
+                        body.createFixture(shape, 1f);
+                        shape.dispose();
+                    }
+                }
+            }
+        }
+    }
 
     Box2DDebugRenderer box2DDebugRenderer = new Box2DDebugRenderer();
     {
@@ -62,11 +100,6 @@ public class GameScreen implements Screen {
         for(ieee.cs.isik.platformergaeme.AssetPair pair: getAssets())
             if(!assets.isLoaded(pair.assetPath, pair.assetClass))
                 assets.load(pair.assetPath, pair.assetClass);
-
-        var prop = map.getMap().getProperties();
-        float meters2PixelsRatio = prop.get("tileheight", Integer.class);
-        GameManager.setMeter2PixelsRatio(meters2PixelsRatio);
-
     }
 
     /**
@@ -82,7 +115,7 @@ public class GameScreen implements Screen {
         } else {
             if(entities.isEmpty()) {
                 CharacterEntity myChar = addMainChar();
-                myChar.body.setTransform(5f, 5f, 0);
+                myChar.body.setTransform(10f, 1f, 0);
             }
         }
 
@@ -196,6 +229,7 @@ public class GameScreen implements Screen {
             body
         );
 
+        ((StateMaterial)myChar.material).state = 1;
         entities.add(myChar);
 
         return myChar;
