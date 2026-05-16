@@ -14,16 +14,19 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import ieee.cs.isik.platformergaeme.game.CharacterEntity;
-import ieee.cs.isik.platformergaeme.game.Pack16Character;
+import ieee.cs.isik.platformergaeme.AssetPair;
 import ieee.cs.isik.platformergaeme.GameManager;
-import ieee.cs.isik.platformergaeme.game.StateMaterial;
+import ieee.cs.isik.platformergaeme.game.CharacterEntity;
 import ieee.cs.isik.platformergaeme.game.MapManager;
+import ieee.cs.isik.platformergaeme.game.Pack16Character;
+import ieee.cs.isik.platformergaeme.game.StateMaterial;
 import ieee.cs.isik.platformergaeme.game.mapmanagers.TestMap;
 
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
-public class GameScreen implements Screen {
+public class GameScreen implements Screen, ieee.cs.isik.platformergaeme.IAssetfull {
 
     /** This {@link World} object is part of the physics engine 'box2d'
      * @see World
@@ -235,9 +238,19 @@ public class GameScreen implements Screen {
         return myChar;
     }
 
-    public ieee.cs.isik.platformergaeme.AssetPair[] getAssets() {
-        return new ieee.cs.isik.platformergaeme.AssetPair[] {
-            new ieee.cs.isik.platformergaeme.AssetPair("16_Character_Pack/PunpKin.png", Texture.class)
-        };
+
+    private static final List<AssetPair> assetsList;
+    static {
+        LinkedList<AssetPair> list = new LinkedList<>();
+        list.push(new AssetPair("16_Character_Pack/PunpKin.png", Texture.class));
+        assetsList = Collections.unmodifiableList(list);
+
+    }
+    public List<AssetPair> getAssets() {
+        return assetsList;
+    }
+
+    public AssetManager getAssetManager() {
+        return assets;
     }
 }

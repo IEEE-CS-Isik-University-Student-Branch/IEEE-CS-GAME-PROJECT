@@ -19,7 +19,11 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import ieee.cs.isik.platformergaeme.AssetPair;
 import ieee.cs.isik.platformergaeme.GameManager;
 
-public class MenuScreen implements Screen {
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+public class MenuScreen implements Screen, ieee.cs.isik.platformergaeme.IAssetfull {
     private Stage stage = new Stage(new FillViewport(16 * 40,9*40));
     public final AssetManager assets = new AssetManager();
 
@@ -162,9 +166,17 @@ public class MenuScreen implements Screen {
         assets.dispose();
     }
 
-    public AssetPair[] getAssets() {
-        return new AssetPair[] {
-            new AssetPair("UI/Buttons.png", Texture.class)
-        };
+    private static final List<AssetPair> assetsList;
+    static {
+        LinkedList<AssetPair> list = new LinkedList<>();
+        list.push(new AssetPair("UI/Buttons.png", Texture.class));
+        assetsList = Collections.unmodifiableList(list);
+    }
+    public List<AssetPair> getAssets() {
+        return assetsList;
+    }
+
+    public AssetManager getAssetManager() {
+        return assets;
     }
 }
