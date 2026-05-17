@@ -3,10 +3,9 @@ package ieee.cs.isik.platformergaeme;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import ieee.cs.isik.platformergaeme.screens.GameScreen;
+import ieee.cs.isik.platformergaeme.screens.LoadingScreen;
 import ieee.cs.isik.platformergaeme.screens.MenuScreen;
 import org.jetbrains.annotations.NotNull;
-
-import java.awt.*;
 
 
 /**
@@ -40,13 +39,17 @@ public class GameManager {
      */
     public static void show(@NotNull ScreenType type) {
         switch (type) {
-            case MenuType:
-                game.setScreen(new MenuScreen());
-                break;
             case GameType:
-                game.setScreen(new GameScreen());
+                game.setScreen(new LoadingScreen<>(new GameScreen(), null));
+                break;
+            default:
+                game.setScreen(new LoadingScreen<>(new MenuScreen(), null));
                 break;
         }
+    }
+
+    public static Game getGame() {
+        return game;
     }
 
     private final static float characterHeightInMeters=1.8f;

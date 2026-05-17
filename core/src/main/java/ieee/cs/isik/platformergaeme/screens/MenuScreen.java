@@ -8,7 +8,6 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -27,8 +26,6 @@ public class MenuScreen implements Screen, ieee.cs.isik.platformergaeme.IAssetfu
     private Stage stage = new Stage(new FillViewport(16 * 40,9*40));
     public final AssetManager assets = new AssetManager();
 
-    private SpriteBatch debugBatch = new SpriteBatch();
-    private BitmapFont debugIndicator = new BitmapFont();
 
     private boolean isStageBuild = false;
     /**
@@ -43,10 +40,10 @@ public class MenuScreen implements Screen, ieee.cs.isik.platformergaeme.IAssetfu
         // Set current input processor to the stage
         Gdx.input.setInputProcessor(stage);
 
-
-        for(AssetPair pair: getAssets())
-            if(!assets.isLoaded(pair.assetPath, pair.assetClass))
-                assets.load(pair.assetPath, pair.assetClass);
+        if(!isStageBuild) {
+            buildStage();
+            isStageBuild = true;
+        }
     }
 
     // Initialize the stage when new instance of MenuScreen created
@@ -100,17 +97,7 @@ public class MenuScreen implements Screen, ieee.cs.isik.platformergaeme.IAssetfu
      */
     @Override
     public void render(float delta) {
-        if(assets.update()) { // returns true if all assets loaded
-            if(!isStageBuild) {
-                buildStage();
-                isStageBuild = true;
-            }
-        } else {
-            // Indicate that screen is loading.
-            debugBatch.begin();
-            debugIndicator.draw(debugBatch, "Loading...", 0, 0);
-            debugBatch.end();
-        }
+
         /*
          * Clear previous frame
          * This will paint entire screen to the default color that we decided in show() with Gdx.gl20.glClearColor function

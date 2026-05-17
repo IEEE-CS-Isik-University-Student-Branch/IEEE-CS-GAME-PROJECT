@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface IAssetfull {
     public AssetManager getAssetManager();
-    public List<AssetPair> getAssets();
+    public List<ieee.cs.isik.platformergaeme.AssetPair> getAssets();
 }
