@@ -4,16 +4,29 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import ieee.cs.isik.platformergaeme.AssetPair;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 public class LoadingScreen<T extends Screen & ieee.cs.isik.platformergaeme.IAssetfull> implements Screen {
 
     @NotNull
     T targetScreen;
+
+    BitmapFont font = new BitmapFont();
+    {
+        font.getData().setScale(2);
+    }
+
+    OrthographicCamera cam = new OrthographicCamera();
+    SpriteBatch batch = new SpriteBatch();
+
 
     public LoadingScreen(@NotNull T targetScreen, List<AssetPair> extraAssets) {
         this.targetScreen = targetScreen;
@@ -51,7 +64,11 @@ public class LoadingScreen<T extends Screen & ieee.cs.isik.platformergaeme.IAsse
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         boolean loadStatus = targetScreen.getAssetManager().update(10);
-        System.out.printf("Screen %d: %.2f%%\n", screenCount, targetScreen.getAssetManager().getProgress() * 100);
+
+        batch.setProjectionMatrix(cam.combined);
+        batch.begin();
+        font.draw(batch, String.format(Locale.ENGLISH, "Loading: %.2f%%", targetScreen.getAssetManager().getProgress() * 100), 100, 150, 500, 1, false);
+        batch.end();
 
         if(loadStatus) {
             ieee.cs.isik.platformergaeme.GameManager.getGame().setScreen(targetScreen);
@@ -66,7 +83,7 @@ public class LoadingScreen<T extends Screen & ieee.cs.isik.platformergaeme.IAsse
      */
     @Override
     public void resize(int width, int height) {
-
+        cam.setToOrtho(false, width, height);
     }
 
     /**
