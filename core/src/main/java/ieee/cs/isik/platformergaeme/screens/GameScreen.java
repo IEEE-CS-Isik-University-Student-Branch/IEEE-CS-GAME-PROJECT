@@ -30,7 +30,7 @@ public class GameScreen implements Screen, ieee.cs.isik.platformergaeme.IAssetfu
 
 
     AssetManager assetManager = new AssetManager();
-    TiledMap map = new TiledMapLoader().load("adsız.tmx");
+    TiledMap map;
 
 
     OrthographicCamera camera = new OrthographicCamera();
@@ -38,13 +38,7 @@ public class GameScreen implements Screen, ieee.cs.isik.platformergaeme.IAssetfu
         camera.zoom = 1.5f;
         camera.update();
     }
-    {
-        var prop = map.getProperties();
-        float meters2PixelsRatio = prop.get("tileheight", Integer.class);
-        GameManager.setMeter2PixelsRatio(meters2PixelsRatio);
 
-        mapManager = new TestMap(map, camera);
-    }
 
     MapManager mapManager;
 
@@ -70,7 +64,24 @@ public class GameScreen implements Screen, ieee.cs.isik.platformergaeme.IAssetfu
 
     SpriteBatch batch = new SpriteBatch();
 
-    {
+
+    /**
+     * Called when this screen becomes the current screen for a {@link Game}.
+     */
+    @Override
+    public void show() {
+        // Set default background color
+        Gdx.gl20.glClearColor(0, 0, 0, 1);
+
+        {
+            map = assetManager.get("testmap/map.tmx", TiledMap.class);
+            var prop = map.getProperties();
+            float meters2PixelsRatio = prop.get("tileheight", Integer.class);
+            GameManager.setMeter2PixelsRatio(meters2PixelsRatio);
+
+            mapManager = new TestMap(map, camera);
+        }
+
         for (com.badlogic.gdx.maps.tiled.TiledMapTileLayer layer : map.getLayers().getByType(com.badlogic.gdx.maps.tiled.TiledMapTileLayer.class)) {
 
             for (int col = 0; col < layer.getWidth(); col++) {
@@ -98,16 +109,6 @@ public class GameScreen implements Screen, ieee.cs.isik.platformergaeme.IAssetfu
                 }
             }
         }
-    }
-
-    /**
-     * Called when this screen becomes the current screen for a {@link Game}.
-     */
-    @Override
-    public void show() {
-        // Set default background color
-        Gdx.gl20.glClearColor(0, 0, 0, 1);
-
 
         if(entities.isEmpty()) {
             CharacterEntity myChar = addMainChar();

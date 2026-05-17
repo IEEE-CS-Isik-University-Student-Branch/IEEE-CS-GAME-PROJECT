@@ -41,10 +41,19 @@ public class LoadingScreen<T extends Screen & ieee.cs.isik.platformergaeme.IAsse
      *
      * @param delta The time in seconds since the last render.
      */
+
+    static int screenCount = 0;
+    {
+        screenCount++;
+    }
     @Override
     public void render(float delta) {
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        if(targetScreen.getAssetManager().update()) {
+
+        boolean loadStatus = targetScreen.getAssetManager().update(10);
+        System.out.printf("Screen %d: %.2f%%\n", screenCount, targetScreen.getAssetManager().getProgress() * 100);
+
+        if(loadStatus) {
             ieee.cs.isik.platformergaeme.GameManager.getGame().setScreen(targetScreen);
             return;
         }
