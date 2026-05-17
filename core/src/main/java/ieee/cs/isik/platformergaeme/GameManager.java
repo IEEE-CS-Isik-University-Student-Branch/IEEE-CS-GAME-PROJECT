@@ -2,11 +2,15 @@ package ieee.cs.isik.platformergaeme;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapLoader;
 import ieee.cs.isik.platformergaeme.screens.GameScreen;
+import ieee.cs.isik.platformergaeme.screens.LoadingScreen;
 import ieee.cs.isik.platformergaeme.screens.MenuScreen;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
+import java.util.List;
 
 
 /**
@@ -40,13 +44,23 @@ public class GameManager {
      */
     public static void show(@NotNull ScreenType type) {
         switch (type) {
-            case MenuType:
-                game.setScreen(new MenuScreen());
-                break;
             case GameType:
-                game.setScreen(new GameScreen());
+                GameScreen gameScreen = new GameScreen();
+                AssetManager assets = gameScreen.getAssetManager();
+                if(assets.getLoader(TiledMap.class) == null)
+                    assets.setLoader(TiledMap.class, new TiledMapLoader());
+                game.setScreen(new LoadingScreen<>(gameScreen, List.of(new AssetPair("testmap/map.tmx", TiledMap.class))));
+                break;
+
+            case MenuType:
+            default:
+                game.setScreen(new LoadingScreen<>(new MenuScreen(), null));
                 break;
         }
+    }
+
+    public static Game getGame() {
+        return game;
     }
 
     private final static float characterHeightInMeters=1.8f;

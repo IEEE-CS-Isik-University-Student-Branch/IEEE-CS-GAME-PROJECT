@@ -11,33 +11,47 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import ieee.cs.isik.platformergaeme.game.CharacterEntity;
-import ieee.cs.isik.platformergaeme.game.Pack16Character;
+import ieee.cs.isik.platformergaeme.AssetPair;
 import ieee.cs.isik.platformergaeme.GameManager;
+import ieee.cs.isik.platformergaeme.game.CharacterEntity;
+import ieee.cs.isik.platformergaeme.game.MapManager;
+import ieee.cs.isik.platformergaeme.game.Pack16Character;
+import ieee.cs.isik.platformergaeme.game.StateMaterial;
+import ieee.cs.isik.platformergaeme.game.mapmanagers.TestMap;
+
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
-public class GameScreen implements Screen {
+public class GameScreen implements Screen, ieee.cs.isik.platformergaeme.IAssetfull {
 
-    /** This {@link World} object is part of the physics engine 'box2d'
-     * @see World
-     */
 
-    TiledMap harita = new TmxMapLoader().load("adsız.tmx");;
-    OrthogonalTiledMapRenderer map = new OrthogonalTiledMapRenderer(harita);
+    AssetManager assetManager = new AssetManager();
+    TiledMap map;
+
+
     OrthographicCamera camera = new OrthographicCamera();
     {
         camera.zoom = 1.5f;
         camera.update();
     }
 
+
+    MapManager mapManager;
+
+
+
+    /** This {@link World} object is part of the physics engine 'box2d'
+     * @see World
+     */
     public final World physicsWorld = new World(
         new Vector2(0, -9.8f), // Default gravity of the World, 9.8 m / s^2 to the down
         true // Allow sleep state, this will ignore in active bodies which is going to improve  game performance
     );
+
 
     Box2DDebugRenderer box2DDebugRenderer = new Box2DDebugRenderer();
     {
@@ -50,7 +64,7 @@ public class GameScreen implements Screen {
 
     SpriteBatch batch = new SpriteBatch();
 
-    AssetManager assets = new AssetManager();
+
     /**
      * Called when this screen becomes the current screen for a {@link Game}.
      */
@@ -59,14 +73,47 @@ public class GameScreen implements Screen {
         // Set default background color
         Gdx.gl20.glClearColor(0, 0, 0, 1);
 
-        for(ieee.cs.isik.platformergaeme.AssetPair pair: getAssets())
-            if(!assets.isLoaded(pair.assetPath, pair.assetClass))
-                assets.load(pair.assetPath, pair.assetClass);
+        {
+            map = assetManager.get("testmap/map.tmx", TiledMap.class);
+            var prop = map.getProperties();
+            float meters2PixelsRatio = prop.get("tileheight", Integer.class);
+            GameManager.setMeter2PixelsRatio(meters2PixelsRatio);
 
-        var prop = map.getMap().getProperties();
-        float meters2PixelsRatio = prop.get("tileheight", Integer.class);
-        GameManager.setMeter2PixelsRatio(meters2PixelsRatio);
+            mapManager = new TestMap(map, camera);
+        }
 
+        for (com.badlogic.gdx.maps.tiled.TiledMapTileLayer layer : map.getLayers().getByType(com.badlogic.gdx.maps.tiled.TiledMapTileLayer.class)) {
+
+            for (int col = 0; col < layer.getWidth(); col++) {
+                for (int row = 0; row < layer.getHeight(); row++) {
+                    var cell = layer.getCell(col, row);
+
+                    if (cell != null && cell.getTile() != null) {
+
+                        float x = col + 0.5f;
+                        float y = row + 0.5f;
+
+                        BodyDef bodyDef = new BodyDef();
+                        bodyDef.type = BodyDef.BodyType.StaticBody;
+                        bodyDef.position.set(x, y);
+                        bodyDef.fixedRotation = true;
+
+                        Body body = physicsWorld.createBody(bodyDef);
+
+                        PolygonShape shape = new PolygonShape();
+                        shape.setAsBox(0.5f, 0.5f);
+
+                        body.createFixture(shape, 1f);
+                        shape.dispose();
+                    }
+                }
+            }
+        }
+
+        if(entities.isEmpty()) {
+            CharacterEntity myChar = addMainChar();
+            myChar.body.setTransform(10f, 1f, 0);
+        }
     }
 
     /**
@@ -76,15 +123,6 @@ public class GameScreen implements Screen {
      */
     @Override
     public void render(float delta) {
-        if(!assets.update()) {
-            /* Loading */
-            return;
-        } else {
-            if(entities.isEmpty()) {
-                CharacterEntity myChar = addMainChar();
-                myChar.body.setTransform(5f, 5f, 0);
-            }
-        }
 
         /*
          * Clear previous frame
@@ -99,8 +137,7 @@ public class GameScreen implements Screen {
             2 // If entities gets conflict so much we must increase position iterations.
         );
 
-        map.setView(camera);
-        map.render();
+        mapManager.render(delta);
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
@@ -173,10 +210,9 @@ public class GameScreen implements Screen {
         physicsWorld.dispose();
         for(ieee.cs.isik.platformergaeme.game.Entity e: entities)
             e.dispose();
-        harita.dispose();
-        map.dispose();
+        mapManager.dispose();
         physicsWorld.dispose();
-        assets.dispose();
+        assetManager.dispose();
         box2DDebugRenderer.dispose();
     }
 
@@ -191,19 +227,30 @@ public class GameScreen implements Screen {
         Fixture Fix = body.createFixture(circle, 1f);
 
         CharacterEntity myChar = Pack16Character.C_PUNPKIN.loadEntity(
-            assets,
+            assetManager,
             0,
             body
         );
 
+        ((StateMaterial)myChar.material).state = 1;
         entities.add(myChar);
 
         return myChar;
     }
 
-    public ieee.cs.isik.platformergaeme.AssetPair[] getAssets() {
-        return new ieee.cs.isik.platformergaeme.AssetPair[] {
-            new ieee.cs.isik.platformergaeme.AssetPair("16_Character_Pack/PunpKin.png", Texture.class)
-        };
+
+    private static final List<AssetPair> assetsList;
+    static {
+        LinkedList<AssetPair> list = new LinkedList<>();
+        list.push(new AssetPair("16_Character_Pack/PunpKin.png", Texture.class));
+        assetsList = Collections.unmodifiableList(list);
+
+    }
+    public List<AssetPair> getAssets() {
+        return assetsList;
+    }
+
+    public AssetManager getAssetManager() {
+        return assetManager;
     }
 }
